@@ -1,8 +1,10 @@
 #![allow(unused)]
 
+use eyre::Context;
+use eyre::anyhow;
+use eyre::bail;
+use eyre::eyre;
 use std::fs::read_to_string;
-
-use anyhow::Context;
 
 #[derive(thiserror::Error, Debug)]
 pub enum Error {
@@ -14,7 +16,7 @@ pub enum Error {
 
     // #[error("an error occurred")] // 会出现噪点
     #[error(transparent)]
-    Any(#[from] anyhow::Error),
+    Any(#[from] eyre::Error),
 }
 
 fn read_file() -> Result<(), Error> {

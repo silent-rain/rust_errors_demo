@@ -10,4 +10,8 @@ log = "0.4"
 tracing = "0.1"
 tracing-subscriber = "0.3"
 
-eyre = "0.6"
+eyre = { version = "0.6", default-features = false, features = [
+    # "auto-install",
+    # "track-caller",
+] }
+color-eyre = "0.6" # 用于各种错误的丰富多彩、一致且格式良好的错误报告的板条箱。

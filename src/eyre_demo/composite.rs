@@ -2,9 +2,10 @@
 
 use std::fs::read_to_string;
 
-use anyhow::anyhow;
-use anyhow::bail;
-use anyhow::{Context, Result};
+use eyre::anyhow;
+use eyre::bail;
+use eyre::eyre;
+use eyre::{Context, Result};
 
 fn read_file() -> Result<()> {
     let content = read_to_string("path/to/file").context("Failed to read file")?;
@@ -30,11 +31,15 @@ fn msg3() -> Result<()> {
     Ok(())
 }
 
-fn anyhow_demo() -> anyhow::Result<()> {
+fn anyhow_demo() -> eyre::Result<()> {
     Err(anyhow!("Missing attribute: {}", "missing"))
 }
 
-fn bail_demo() -> anyhow::Result<()> {
+fn eyre_demo() -> eyre::Result<()> {
+    Err(eyre!("Missing attribute: {}", "missing"))
+}
+
+fn bail_demo() -> eyre::Result<()> {
     bail!("Missing attribute: {}", "missing")
 }
 
@@ -52,6 +57,13 @@ mod tests {
     #[test]
     fn it_anyhow_demo() {
         if let Err(e) = anyhow_demo() {
+            println!("{:?}", e);
+        }
+    }
+
+    #[test]
+    fn it_eyre_demo() {
+        if let Err(e) = eyre_demo() {
             println!("{:?}", e);
         }
     }
