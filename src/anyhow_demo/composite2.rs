@@ -1,6 +1,8 @@
 #![allow(unused)]
 
 use anyhow::Context;
+use anyhow::anyhow;
+use anyhow::bail;
 use std::fs::read_to_string;
 
 #[derive(thiserror::Error, Debug)]
@@ -38,6 +40,14 @@ fn msg3() -> Result<(), Error> {
     msg2().context("msg3 failed")?;
     println!("this is a msg3");
     Ok(())
+}
+
+fn anyhow_demo() -> anyhow::Result<()> {
+    Err(anyhow!("Missing attribute: {}", "missing"))
+}
+
+fn bail_demo() -> anyhow::Result<()> {
+    bail!("Missing attribute: {}", "missing")
 }
 
 #[cfg(test)]
