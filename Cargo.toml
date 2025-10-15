@@ -15,3 +15,7 @@ eyre = { version = "0.6", default-features = false, features = [
     # "track-caller",
 ] }
 color-eyre = "0.6" # 用于各种错误的丰富多彩、一致且格式良好的错误报告的板条箱。
+miette = { version = "7.6", features = [
+    "fancy", # 花式打印机
+] } # 是一个 Rust 的诊断库。它包含一系列特性/协议，允许您使用其错误报告功能，甚至编写您自己的错误报告！
+snafu = "0.8"
