@@ -1,46 +1,62 @@
+// 类型转换 Error into ErrorMsg
+
 use std::fs::read_to_string;
 
-use anyhow::Context;
-// use color_eyre::eyre::WrapErr;
+// use anyhow::Context;
+use color_eyre::eyre::WrapErr;
 
 use crate::into_demo::Error;
 use crate::into_demo::ErrorMsg;
-use crate::into_demo::error::IntoErrorMsg;
+use crate::into_demo::IntoErrorMsg;
 
-fn demo1() -> Result<(), Error> {
+fn msg1() -> Result<(), Error> {
     let content = read_to_string("path/to/file")?;
     println!("{}", content);
     Ok(())
 }
 
-fn demo2() -> Result<(), Error> {
-    demo1()?;
+fn msg2() -> Result<(), Error> {
+    msg1()?;
     Ok(())
 }
 
-fn demo3() -> Result<(), ErrorMsg> {
-    demo1().map_err(|e| {
+fn msg3() -> Result<(), Error> {
+    msg2()?;
+    Ok(())
+}
+
+fn msg4() -> Result<(), Error> {
+    msg3()?;
+    Ok(())
+}
+
+fn into_err_demo1() -> Result<(), ErrorMsg> {
+    msg4().map_err(|e| {
         println!("this is a error");
         e.into_err_with_msg("this is a msg")
     })?;
-    demo2().into_err_with_msg("this is a msg")?;
+
+    Ok(())
+}
+
+fn into_err_demo2() -> Result<(), ErrorMsg> {
+    msg4().into_err_with_msg("this is a msg")?;
     println!("this is a demo2");
     Ok(())
 }
 
-fn msg4() -> Result<(), ErrorMsg> {
-    demo1()
+fn context_demo1() -> Result<(), ErrorMsg> {
+    msg4()
         .context("this is a msg")
         .into_err_with_msg("this is a msg")?;
 
-    demo1()
-        .context("this is a msg")
-        .into_err_with_appended_msg("this is a msg")?;
     Ok(())
 }
 
-fn msg5() -> Result<(), ErrorMsg> {
-    demo2().context("this is a msg").into_err()?;
+fn context_demo2() -> Result<(), ErrorMsg> {
+    msg4()
+        .context("this is a msg")
+        .into_err_with_appended_msg("this is a msg")?;
     Ok(())
 }
 
@@ -49,21 +65,10 @@ mod tests {
     use super::*;
 
     #[test]
-    fn it_simple() -> anyhow::Result<()> {
-        color_eyre::install().expect("log ");
+    fn it_into_err_demo1() -> anyhow::Result<()> {
+        color_eyre::install().expect("init log failed");
 
-        if let Err(e) = demo3() {
-            println!("{e:?}");
-        }
-
-        Ok(())
-    }
-
-    #[test]
-    fn it_msg4() -> color_eyre::Result<()> {
-        color_eyre::install().expect("log ");
-
-        if let Err(e) = msg4() {
+        if let Err(e) = into_err_demo1() {
             println!("{}", e);
             println!("====================================");
             println!("{:?}", e);
@@ -75,10 +80,40 @@ mod tests {
     }
 
     #[test]
-    fn it_msg5() -> color_eyre::Result<()> {
-        color_eyre::install().expect("log ");
+    fn it_into_err_demo2() -> anyhow::Result<()> {
+        color_eyre::install().expect("init log failed");
 
-        if let Err(e) = msg5() {
+        if let Err(e) = into_err_demo2() {
+            println!("{}", e);
+            println!("====================================");
+            println!("{:?}", e);
+            println!("====================================");
+            println!("{:#?}", e);
+        }
+
+        Ok(())
+    }
+
+    #[test]
+    fn it_context_demo1() -> color_eyre::Result<()> {
+        color_eyre::install().expect("init log failed");
+
+        if let Err(e) = context_demo1() {
+            println!("{}", e);
+            println!("====================================");
+            println!("{:?}", e);
+            println!("====================================");
+            println!("{:#?}", e);
+        }
+
+        Ok(())
+    }
+
+    #[test]
+    fn it_context_demo2() -> color_eyre::Result<()> {
+        color_eyre::install().expect("init log failed");
+
+        if let Err(e) = context_demo2() {
             println!("{}", e);
             println!("====================================");
             println!("{:?}", e);

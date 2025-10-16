@@ -53,6 +53,10 @@ impl ErrorMsg {
     pub fn msg(&self) -> &str {
         &self.msg
     }
+
+    pub fn inner_err(&self) -> &Error {
+        &self.inner
+    }
 }
 
 // impl std::error::Error for ErrorMsg {}
