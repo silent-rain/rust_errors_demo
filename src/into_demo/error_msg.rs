@@ -1,32 +1,32 @@
-use std::fmt;
-
 use crate::into_demo::error::Error;
 
 #[derive(Debug, thiserror::Error)]
 pub struct ErrorMsg {
-    inner: Error,
     code: u16,
     msg: String,
+    inner: Option<Error>,
 }
 
 impl ErrorMsg {
     /// 创建一个新的错误信息
     pub fn new(code: u16, msg: &str) -> Self {
         Self {
-            inner: Error::Unknown,
             code,
             msg: msg.to_string(),
+            inner: None,
         }
     }
 
+    /// 从 Error 创建一个新的错误信息
     pub fn form_err(err: Error) -> Self {
         Self {
             code: err.code(),
             msg: err.msg(),
-            inner: err,
+            inner: Some(err),
         }
     }
 
+    /// 重置错误码
     pub fn with_code(mut self, code: u16) -> Self {
         self.code = code;
         self
@@ -54,15 +54,14 @@ impl ErrorMsg {
         &self.msg
     }
 
-    pub fn inner_err(&self) -> &Error {
-        &self.inner
+    /// 返回内部错误信息
+    pub fn inner_err(&self) -> Option<&Error> {
+        self.inner.as_ref()
     }
 }
 
-// impl std::error::Error for ErrorMsg {}
-
-impl fmt::Display for ErrorMsg {
-    fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
+impl std::fmt::Display for ErrorMsg {
+    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
         write!(f, "ErrorMsg(code: {}, msg: {})", self.code(), self.msg())
     }
 }

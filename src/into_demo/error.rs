@@ -4,14 +4,15 @@ use crate::into_demo::ErrorMsg;
 #[repr(u16)]
 pub enum Error {
     #[error("ok")]
-    Ok = 10000,
+    Ok = 0,
+
+    #[error("undefined error")]
+    Undefined = 10000,
+    #[error("unknown error")]
+    Unknown,
 
     #[error(transparent)]
     Io(#[from] std::io::Error),
-
-    #[error("unknown data store error")]
-    Unknown,
-
     #[error(transparent)]
     Any(#[from] anyhow::Error),
     #[error(transparent)]
@@ -31,4 +32,3 @@ impl Error {
         self.to_string()
     }
 }
-
