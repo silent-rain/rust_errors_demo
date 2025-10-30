@@ -14,8 +14,10 @@ tracing-subscriber = { version = "0.3", features = [
     "env-filter",
     "time",
     "local-time",
-    "tracing-log",
 ] }
+tracing-appender = { version = "0.2" }
+tracing-error = { version = "0.2" }
+tracing-log = { version = "0.2" }
 time = { version = "0.3", features = ["macros"] }
 
 eyre = { version = "0.6", default-features = false, features = [
