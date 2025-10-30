@@ -5,4 +5,6 @@ mod miette_demo;
 mod snafu_dmeo;
 mod thiserror_demo;
 
+mod tracing_demo;
+
 mod into_demo;
